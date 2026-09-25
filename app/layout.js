@@ -21,7 +21,7 @@ const fontSans = localFont({
 });
 
 export const metadata = {
-  title: "MyWebsite — Build something meaningful",
+  title: "Sustri Website",
   description:
     "We help individuals and businesses build modern, simple, and useful digital experiences.",
 };
