@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
+import { useFavorites } from "@/context/FavoriteContext";
 import { useUser } from "@/context/UserContext";
 
 const links = [
@@ -13,11 +14,13 @@ const links = [
   { href: "/services", label: "Services" },
   { href: "/profile", label: "Profile" },
   { href: "/contact", label: "Contact" },
+  { href: "/favorites", label: "Favorites" },
 ];
 
 export default function Navbar() {
   const pathname = usePathname();
   const { userName } = useUser();
+  const { favorites } = useFavorites();
 
   return (
     <header className="sticky top-4 z-50 mx-auto w-full max-w-4xl px-4">
@@ -43,6 +46,11 @@ export default function Navbar() {
                 )}
               >
                 {link.label}
+                {link.href === "/favorites" && favorites.length > 0 ? (
+                  <span className="ml-1 text-xs text-primary">
+                    ({favorites.length})
+                  </span>
+                ) : null}
               </Link>
             );
           })}

@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { FavoriteProvider } from "@/context/FavoriteContext";
 import { UserProvider } from "@/context/UserContext";
 
 const fontSans = localFont({
@@ -31,9 +32,11 @@ export default function RootLayout({ children }) {
     <html lang="en" className={`${fontSans.variable} h-full antialiased`}>
       <body className="flex min-h-screen flex-col bg-background text-foreground">
         <UserProvider>
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
+          <FavoriteProvider>
+            <Navbar />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </FavoriteProvider>
         </UserProvider>
       </body>
     </html>
