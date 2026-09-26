@@ -37,7 +37,7 @@ export default function UsersPage() {
   if (error) {
     return (
       <main className="flex min-h-[70vh] items-center justify-center px-6">
-        <div className="rounded-2xl border border-destructive/30 bg-destructive/10 p-6 text-center">
+          <div className="rounded-2xl border border-destructive/30 bg-destructive/10 p-6 text-center">
           <h2 className="font-semibold text-destructive">Something went wrong</h2>
           <p className="mt-2 text-sm text-destructive/80">{error}</p>
         </div>
