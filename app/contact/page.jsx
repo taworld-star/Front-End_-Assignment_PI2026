@@ -7,6 +7,7 @@ import { useUser } from "@/context/UserContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
+import { submitContactForm } from "./actions";
 
 const contactInfo = [
   { icon: Mail, label: "Email", value: "hello@mywebsite.com" },
@@ -21,11 +22,17 @@ export default function Contact() {
   const [message, setMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
-    console.log({ name, email, message });
-    setUserName(name);
-    setSubmitted(true);
+    const formData = new FormData(event.currentTarget);
+    const result = await submitContactForm(formData);
+
+    if (result.success) {
+      setUserName(name);
+      setSubmitted(true);
+    } else {
+      alert(result.error);
+    }
   }
 
   return (
@@ -82,6 +89,7 @@ export default function Contact() {
                       </label>
                       <Input
                         id="name"
+                        name="name"
                         placeholder="Your name"
                         value={name}
                         onChange={(event) => setName(event.target.value)}
@@ -95,6 +103,7 @@ export default function Contact() {
                       </label>
                       <Input
                         id="email"
+                        name="email"
                         type="email"
                         placeholder="you@example.com"
                         value={email}
@@ -110,6 +119,7 @@ export default function Contact() {
                     </label>
                     <textarea
                       id="message"
+                      name="message"
                       rows={5}
                       required
                       placeholder="Tell us about your project..."
