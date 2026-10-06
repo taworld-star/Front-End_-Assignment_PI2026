@@ -7,7 +7,16 @@ export async function GET() {
 
 // CREATE: Tambahkan data favorit baru
 export async function POST(request) {
-  const body = await request.json();
+  let body;
+
+  try {
+    body = await request.json();
+  } catch {
+    return Response.json(
+      { error: "Body request wajib berupa JSON yang valid" },
+      { status: 400 }
+    );
+  }
 
   // Validasi input
   if (!body || !body.id || !body.name) {
