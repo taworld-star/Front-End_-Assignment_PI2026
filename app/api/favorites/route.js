@@ -1,11 +1,9 @@
-import { favorites } from "@/lib/db";
+import { getAllFavorites, addFavorite } from "@/lib/service/favoriteService";
 
-// READ: Ambil semua data favorit
 export async function GET() {
-  return Response.json(favorites);
+  return Response.json(await getAllFavorites());
 }
 
-// CREATE: Tambahkan data favorit baru
 export async function POST(request) {
   let body;
 
@@ -18,23 +16,11 @@ export async function POST(request) {
     );
   }
 
-  // Validasi input
-  if (!body || !body.id || !body.name) {
-    return Response.json(
-      { error: "id dan name wajib diisi" },
-      { status: 400 }
-    );
+  const result = await addFavorite(body);
+
+  if (!result.success) {
+    return Response.json({ error: result.error }, { status: result.status });
   }
 
-  // Cek jika data sudah pernah difavoritkan
-  const alreadyExists = favorites.some((favorite) => favorite.id === body.id);
-  if (alreadyExists) {
-    return Response.json(
-      { error: "User ini sudah difavoritkan" },
-      { status: 400 }
-    );
-  }
-
-  favorites.push(body);
-  return Response.json(body, { status: 201 });
+  return Response.json(result.data, { status: result.status });
 }

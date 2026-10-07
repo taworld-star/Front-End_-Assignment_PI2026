@@ -1,48 +1,37 @@
-import { favorites } from "@/lib/db";
+import {
+  removeFavorite,
+  updateFavoriteNote,
+} from "@/lib/service/favoriteService";
 
-// DELETE: Menghapus data favorit berdasarkan ID
 export async function DELETE(request, { params }) {
   const { id } = await params;
+  const result = await removeFavorite(id);
 
-  // Mencari indeks data (pastikan perbandingan tipe data sesuai)
-  const index = favorites.findIndex(
-    (favorite) => String(favorite.id) === String(id)
-  );
-
-  if (index === -1) {
-    return Response.json(
-      { error: "Data tidak ditemukan" },
-      { status: 404 }
-    );
+  if (!result.success) {
+    return Response.json({ error: result.error }, { status: result.status });
   }
 
-  favorites.splice(index, 1);
-  return Response.json({ message: "Berhasil dihapus" });
+  return Response.json({ message: result.message });
 }
 
-// PATCH: Memperbarui data favorit (menambahkan/mengubah catatan 'note')
 export async function PATCH(request, { params }) {
   const { id } = await params;
-  const body = await request.json();
+  let body;
 
-  const item = favorites.find(
-    (favorite) => String(favorite.id) === String(id)
-  );
-
-  if (!item) {
+  try {
+    body = await request.json();
+  } catch {
     return Response.json(
-      { error: "Data tidak ditemukan" },
-      { status: 404 }
+      { error: "Body request wajib berupa JSON yang valid" },
+      { status: 400 }
     );
   }
 
-  // Mengubah/menambahkan catatan
-  if (body.note !== undefined) {
-    item.note = body.note;
+  const result = await updateFavoriteNote(id, body);
+
+  if (!result.success) {
+    return Response.json({ error: result.error }, { status: result.status });
   }
 
-  return Response.json({
-    message: "Catatan berhasil diperbarui",
-    data: item,
-  });
+  return Response.json(result.data);
 }
